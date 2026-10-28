@@ -1,0 +1,35 @@
+{
+  "version": 6,
+  "cmakeMinimumRequired": { "major": 3, "minor": 22, "patch": 0 },
+  "configurePresets": [
+    {
+      "name": "macos",
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/build",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release",
+        "CMAKE_OSX_ARCHITECTURES": "arm64;x86_64"
+      }
+    },
+    {
+      "name": "macos-xcode",
+      "generator": "Xcode",
+      "binaryDir": "${sourceDir}/build-xcode",
+      "cacheVariables": {
+        "CMAKE_OSX_ARCHITECTURES": "arm64;x86_64"
+      }
+    }
+  ],
+  "buildPresets": [
+    {
+      "name": "macos-release",
+      "configurePreset": "macos",
+      "configuration": "Release"
+    },
+    {
+      "name": "macos-xcode-release",
+      "configurePreset": "macos-xcode",
+      "configuration": "Release"
+    }
+  ]
+}

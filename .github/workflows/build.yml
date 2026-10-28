@@ -1,0 +1,40 @@
+name: macOS plugin build
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+
+jobs:
+  build:
+    runs-on: macos-14
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install CMake/Ninja
+        run: |
+          brew update
+          brew install cmake ninja
+
+      - name: Configure
+        run: cmake --preset macos
+
+      - name: Build
+        run: cmake --build --preset macos-release
+
+      - name: Package
+        run: |
+          mkdir -p dist
+          ditto build/VoxRage_artefacts/Release/VST3/VoxRage.vst3 dist/VoxRage.vst3
+          if [ -d "build/VoxRage_artefacts/Release/AU/VoxRage.component" ]; then
+            ditto build/VoxRage_artefacts/Release/AU/VoxRage.component dist/VoxRage.component
+          fi
+          cd dist
+          zip -r VoxRage-macOS.zip .
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: VoxRage-macOS
+          path: dist/VoxRage-macOS.zip
